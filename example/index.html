@@ -1,0 +1,124 @@
+<html>
+    <head>
+        <meta charset="utf8">
+        <title>Multi-clipboard examples</title>
+        <script type="module">
+            import MultiClipboard from "../src/index.js"
+            window.addEventListener('load', onLoad)
+            function onLoad() {
+                update()
+            }
+            function getData() {
+                const textData = document.getElementById('data').value
+                const arrayData = JSON.parse(textData);
+                if (!arrayData) {
+                    throw new Error('Invalid data')
+                }
+                return arrayData
+            }
+            function getOptions() {
+                // return { shift: true, sync: true }
+                const options = {}
+
+                options.sync = document.getElementById('sync').checked
+                
+                const dataPoppingElement = Array.from(document.getElementsByName('data-popping')).filter(i => i.checked)[0]
+                const dataPopping = dataPoppingElement ? dataPoppingElement.value : ''
+                if (dataPopping === 'shift') {
+                    options.shift = true
+                } else if (dataPopping === 'pop') {
+                    options.pop = true
+                }
+
+                return options
+            }
+            function update() {
+                console.debug('update')
+                const mClipboard = new MultiClipboard()
+                const data = getData()
+                const options = getOptions()
+                mClipboard.set(data).startWatching(options)
+                window.mClipboard = mClipboard
+                console.log(mClipboard, 'Check window.mClipboard', { options })
+            }
+            window.update = update
+        </script>
+        <style>
+            .inputs input, .inputs select, .inputs textarea, .inputs [contenteditable] {
+                margin: 10px;
+                display: block;
+                clear: both;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Multi Clipboard</h1>
+            <div>
+                This library can be used to copy multiple values to the clipboard, and then paste one after another OR paste by specific index.<br>
+                <br>
+                <h2>Support info</h2>
+                <ul>
+                    <li>Syncing: 〇</li>
+                    <li>Paste one after another: 〇</li>
+                    <li>Paste specific index: ×</li>
+                </ul>
+            </div>
+        </header>
+
+        <section>
+            <h2>Options</h2>
+            <div>
+                <div>
+                    <label>Copied data(MUST BE ARRAY PARSABLE VIA JSON.parse)</label>
+                    <input type="text" id="data" value="[1,2,3]">
+                </div>
+                <div>
+                    <label>Sync</label>
+                    <input type="checkbox" id="sync" checked>
+                </div>
+                <div>
+                    <label>None: </label>
+                    <input type="radio" name="data-popping" value="">
+
+                    <label>Shift: </label>
+                    <input type="radio" name="data-popping" value="shift" checked>
+
+                    <label>Pop: </label>
+                    <input type="radio" name="data-popping" value="pop">
+                </div>
+                <div>
+                    <input type="button" value="Update" onclick="window.update()">
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>Text for copying</h2>
+            <div>
+                <div>A,B,C,D</div>
+                <div>E, F, G, H</div>
+                <div>I,    J, K,L,     M</div>
+                <div>Aperiam corporis vero quis delectus a distinctio accusamus dolor. Sapiente dolorem ut autem quia ad est. Hic ut dolor quia sint rem.</div>
+                <div>abc,def,ghi</div>
+                <div>"abc", "de f", " g h i ", "\"j\"klm\"", n, o, "p,,,q,r,st", uvw,,,x,y,z,,</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Inputs for pasting</h2>
+            <div class="inputs">
+                <input type="text">
+                <input type="number">
+                <input type="date">
+                <textarea></textarea>
+                <select>
+                    <option value="a">A</option>
+                    <option value="b">B</option>
+                    <option value="c">C</option>
+                </select>
+                <div title="contenteditable" contenteditable="true" style="background-color: gray; width: 200px; height: 150px;"></div>
+            </div>
+        </section>
+    </body>
+</html>
