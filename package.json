@@ -13,6 +13,6 @@
   ],
   "homepage": "https://theopenweb.info",
   "bugs": "https://github.com/theopenwebjp/multi-clipboard/issues",
-  "private": true,
-  "license": "UNLICENSED"
+  "private": false,
+  "license": "MIT"
 }
