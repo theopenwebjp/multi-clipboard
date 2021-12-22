@@ -1,6 +1,6 @@
 {
-  "name": "multi-clipboard",
-  "version": "1.0.0",
+  "name": "@theopenweb/multi-clipboard",
+  "version": "1.0.1",
   "description": "Multiple clipboard(copy, cut, paste) handling using the Clipboard API.",
   "main": "./src/index.js",
   "scripts": {},
@@ -11,8 +11,14 @@
   "contributors": [
     "Damien Golding <noreply@damiengolding.com> (https://damiengolding.com)"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theopenwebjp/multi-clipboard.git"
+  },
   "homepage": "https://theopenweb.info",
-  "bugs": "https://github.com/theopenwebjp/multi-clipboard/issues",
+  "bugs": {
+    "url": "https://github.com/theopenwebjp/multi-clipboard/issues"
+  },
   "private": false,
   "license": "MIT"
 }
