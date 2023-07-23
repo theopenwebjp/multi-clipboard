@@ -1,6 +1,6 @@
 {
   "name": "@theopenweb/multi-clipboard",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Multiple clipboard(copy, cut, paste) handling using the Clipboard API.",
   "main": "./src/index.js",
   "scripts": {},
