@@ -87,7 +87,7 @@ export default class MultiClipboard {
   */
   startWatching(options = {}) {
     // OPTIONS
-    const d = /** @param {any} v */ (v, def = undefined) => v !== undefined ? v : def
+    const d = /** @param {any} v @param {boolean} [def] */ (v, def = undefined) => v !== undefined ? v : def
     const shift = d(options.shift, false)
     const pop = d(options.pop, false)
     const sync = d(options.sync, false)
@@ -107,13 +107,14 @@ export default class MultiClipboard {
 
     /**
     * KEYBOARD SHORTCUT LISTENER
+    * @param {KeyboardEvent} event
     */
     const keyboardShortcutListener = (event) => {
-      if (event.ctrl && event.code === 'KeyC') { // COPY
+      if (event.ctrlKey && event.code === 'KeyC') { // COPY
         //
-      } else if (event.ctrl && event.code === 'KeyX') { // CUT
+      } else if (event.ctrlKey && event.code === 'KeyX') { // CUT
         //
-      } else if (event.ctrl && event.code === 'KeyV') { // PASTE
+      } else if (event.ctrlKey && event.code === 'KeyV') { // PASTE
         //
       }
     }
@@ -129,11 +130,11 @@ export default class MultiClipboard {
         data = ''
       }
       const { activeElement } = document
-      if (activeElement) {
+      if (activeElement && activeElement instanceof HTMLElement) {
         const VALUE_ELEMENTS = [HTMLInputElement, HTMLSelectElement, HTMLTextAreaElement]
-        const isValueElement = /** @type {HTMLElement} e */ (e) => VALUE_ELEMENTS.filter(i => e instanceof i).length > 0
+        const isValueElement = /** @param {HTMLElement} e */ (e) => VALUE_ELEMENTS.filter(i => e instanceof i).length > 0
         if (isValueElement(activeElement)) {
-          activeElement.value += data
+          /** @type {HTMLInputElement} */ (activeElement).value += data
         } else {
           activeElement.textContent += data
         }
@@ -152,9 +153,11 @@ export default class MultiClipboard {
     */
     const handleSyncing = (event) => {
       if (sync) {
-        const data = window.getSelection().toString().replace(/[\n\r]+/g, '')
-        event.clipboardData.setData('text/plain', data);
-        this.setDataTransfer(event.clipboardData)
+        const data = window.getSelection()?.toString().replace(/[\n\r]+/g, '') || ''
+        if (event.clipboardData) {
+          event.clipboardData.setData('text/plain', data);
+          this.setDataTransfer(event.clipboardData)
+        }
       }
     }
     /**
@@ -201,6 +204,7 @@ export default class MultiClipboard {
 
     /**
     * COPY LISTENER
+    * @param {ClipboardEvent} event
     */
     const copyListener = (event) => {
       console.debug('copy', { event })
@@ -212,6 +216,7 @@ export default class MultiClipboard {
 
     /**
     * CUT LISTENER
+    * @param {ClipboardEvent} event
     */
     const cutListener = (event) => {
       console.debug('cut', { event })
@@ -223,6 +228,7 @@ export default class MultiClipboard {
 
     /**
     * PASTE LISTENER
+    * @param {ClipboardEvent} event
     */
     const pasteListener = (event) => {
       console.debug('paste', { event })
@@ -242,7 +248,7 @@ export default class MultiClipboard {
   stopWatching() {
     const { listeners } = this
     Object.entries(listeners).forEach(([key, handle]) => {
-      document.removeEventListener(key, handle)
+      document.removeEventListener(key, /** @type {any} */ (handle))
       delete listeners[key]
     })
     return this
